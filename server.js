@@ -6,6 +6,7 @@ const { nextTick } = require('process');
 //  express app
 const app = express();
 
+// middleware - handles the bit between the request and the response
 app.use((req, res, next) => {
     console.log(`${req.method}, ${req.url}, ${req.path}`);
     next()
