@@ -21,12 +21,10 @@ const userSchema = new Schema(
       required: true,
     },
   },
-//   adds a time created field to the schema
-// also adds time updated field to the schema - possibly, need to check
+  //   adds a time created field to the schema
+  // also adds time updated field to the schema - possibly, need to check
   { timestamps: true }
 );
 
 // automatically creates a collection. Pluralises the name of the model
 module.exports = mongoose.model('User', userSchema);
-
-

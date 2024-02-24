@@ -4,6 +4,8 @@ const {
   createUser,
   getUser,
   getUsers,
+  deleteUser,
+  updateUser,
 } = require('../controllers/userControllers');
 
 const router = express.Router();
@@ -18,13 +20,9 @@ router.get('/:id', getUser);
 router.post('/', createUser);
 
 // DELETE a new user
-router.delete('/:id', (req, res) => {
-  res.json({ message: 'DELETE a new user' });
-});
+router.delete('/:id', deleteUser);
 
 // UPDATE a new user
-router.patch('/:id', (req, res) => {
-  res.json({ message: 'UPDATE a new user' });
-});
+router.patch('/:id', updateUser);
 
 module.exports = router;
