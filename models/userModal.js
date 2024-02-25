@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const loginSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
+
 const userSchema = new Schema(
   {
     name: {
@@ -27,4 +39,7 @@ const userSchema = new Schema(
 );
 
 // automatically creates a collection. Pluralises the name of the model
-module.exports = mongoose.model('User', userSchema);
+module.exports = {
+  User: mongoose.model('User', userSchema),
+  Login: mongoose.model('Login', loginSchema),
+};

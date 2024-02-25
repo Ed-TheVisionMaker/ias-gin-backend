@@ -1,4 +1,4 @@
-const User = require('../models/userModal');
+const {User, Login} = require('../models/userModal');
 const mongoose = require('mongoose');
 
 // login user
