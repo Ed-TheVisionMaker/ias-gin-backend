@@ -1,6 +1,8 @@
 const express = require('express');
 const User = require('../models/userModal');
 const {
+  loginUser,
+  signupUser,
   createUser,
   getUser,
   getUsers,
@@ -9,6 +11,12 @@ const {
 } = require('../controllers/userControllers');
 
 const router = express.Router();
+
+//Login route
+router.post('/login', loginUser);
+
+//signup route
+router.post('/signup', signupUser);
 
 // GET all users
 router.get('/', getUsers);

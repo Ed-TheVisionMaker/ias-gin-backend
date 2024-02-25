@@ -1,6 +1,16 @@
 const User = require('../models/userModal');
 const mongoose = require('mongoose');
 
+// login user
+const loginUser = async (req, res) => {
+  res.json({ message: 'login user' });
+}
+
+// signup user
+const signupUser = async (req, res) => {
+  res.json({ message:'signup user' });
+}
+
 // GET all users
 const getUsers = async (req, res) => {
   try {
@@ -81,6 +91,8 @@ const updateUser = async (req, res) => {
 };
 
 module.exports = {
+  loginUser,
+  signupUser,
   createUser,
   getUsers,
   getUser,
