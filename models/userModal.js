@@ -51,6 +51,29 @@ newUserSchema.statics.signup = async function (email, password) {
   return user;
 };
 
+// static login method
+newUserSchema.statics.login = async function (email, password) {
+  console.log(email, password, "login static method");
+  if (!email || !password) {
+    throw Error('Both email and password must be filled in');
+  }
+
+  const user = await this.findOne({ email });
+
+  if(!user) {
+    throw Error('Incorrect email');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if(!isMatch) {
+    throw Error('Incorrect password');
+  }
+
+  return user;
+
+};
+
 const userProfileSchema = new Schema(
   {
     name: {
