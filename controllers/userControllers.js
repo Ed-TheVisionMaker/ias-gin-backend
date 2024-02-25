@@ -1,15 +1,22 @@
-const {User, Login} = require('../models/userModal');
+const { User, newUser } = require('../models/userModal');
 const mongoose = require('mongoose');
 
 // login user
 const loginUser = async (req, res) => {
   res.json({ message: 'login user' });
-}
+};
 
 // signup user
 const signupUser = async (req, res) => {
-  res.json({ message:'signup user' });
-}
+  const { email, password } = req.body;
+  try {
+    const user = await newUser.signup(email, password);
+
+    res.status(200).json({ email, user });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // GET all users
 const getUsers = async (req, res) => {
