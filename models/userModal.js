@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const Schema = mongoose.Schema;
 
@@ -18,6 +19,18 @@ const newUserSchema = new Schema({
 // creating my own static sign up method
 // statics are methods that are attached to the model, not the instance
 newUserSchema.statics.signup = async function (email, password) {
+  if (!email || !password) {
+    throw Error('Both email and password must be filled in');
+  }
+
+  if (!validator.isEmail(email)) {
+    throw Error('Email is invalid');
+  }
+  // default min 1 lower case, 1 upper case, 1 number, 1 symbol, 8 characters
+  if (!validator.isStrongPassword(password)) {
+    throw Error('Password not strong enough');
+  }
+
   // normal function since keyword this needs to point towards the model instance that inovkes it
   const exists = await this.findOne({ email });
 
@@ -38,7 +51,7 @@ newUserSchema.statics.signup = async function (email, password) {
   return user;
 };
 
-const userSchema = new Schema(
+const userProfileSchema = new Schema(
   {
     name: {
       type: String,
@@ -63,7 +76,9 @@ const userSchema = new Schema(
 );
 
 // automatically creates a collection. Pluralises the name of the model
-module.exports = {
-  User: mongoose.model('User', userSchema),
-  newUser: mongoose.model('Login', newUserSchema),
-};
+// module.exports = {
+//   User: mongoose.model('UserProfile', userProfileSchema),
+//   newUser: mongoose.model('User', newUserSchema),
+// };
+
+module.exports = mongoose.model('User', newUserSchema);

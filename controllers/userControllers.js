@@ -1,4 +1,4 @@
-const { User, newUser } = require('../models/userModal');
+const User = require('../models/userModal');
 const mongoose = require('mongoose');
 
 // login user
@@ -10,7 +10,7 @@ const loginUser = async (req, res) => {
 const signupUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await newUser.signup(email, password);
+    const user = await User.signup(email, password);
 
     res.status(200).json({ email, user });
   } catch (error) {
@@ -28,6 +28,14 @@ const getUsers = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
+
+
+
+// This may have to change as I used a schema in the old app. So I need to find
+// out what the way to update a user and add functionality to it is.
+// perhaps it will be adding fields that aren't required.
 
 // GET a single user
 const getUser = async (req, res) => {
