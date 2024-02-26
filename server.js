@@ -1,11 +1,14 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 
 //  express app
 const app = express();
+
+app.use(cors());
 
 // middleware - handles the bit between the request and the response
 // body parser - parses the body of the request so it can be read as req.body
