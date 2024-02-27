@@ -6,10 +6,9 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: '3d' });
 };
 
-
 // login user
 const loginUser = async (req, res) => {
-  const {email, password} = req.body
+  const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
 
@@ -45,10 +44,6 @@ const getUsers = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-
-
-
 
 // This may have to change as I used a schema in the old app. So I need to find
 // out what the way to update a user and add functionality to it is.
