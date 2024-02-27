@@ -53,7 +53,6 @@ newUserSchema.statics.signup = async function (email, password) {
 
 // static login method
 newUserSchema.statics.login = async function (email, password) {
-  console.log(email, password, "login static method");
   if (!email || !password) {
     throw Error('Both email and password must be filled in');
   }
