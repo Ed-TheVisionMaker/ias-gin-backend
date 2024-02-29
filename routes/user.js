@@ -9,6 +9,7 @@ const {
   updateUser,
 } = require('../controllers/userControllers');
 const requireAuth = require('../middleware/requireAuth');
+const errorHandling = require('../middleware/errorHandling');
 
 const router = express.Router();
 
@@ -37,5 +38,7 @@ router.delete('/:id', deleteUser);
 
 // UPDATE a new user
 router.patch('/:id', updateUser);
+
+router.use(errorHandling);
 
 module.exports = router;

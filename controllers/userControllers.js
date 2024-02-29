@@ -1,4 +1,4 @@
-const User = require('../models/userModal');
+const { User } = require('../models/userModal');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
@@ -7,7 +7,7 @@ const createToken = (_id) => {
 };
 
 // login user
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
@@ -16,12 +16,16 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({ email, token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: error.message });
+    } else {
+      next(error);
+    }
   }
 };
 
 // signup user
-const signupUser = async (req, res) => {
+const signupUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.signup(email, password);
@@ -30,7 +34,11 @@ const signupUser = async (req, res) => {
 
     res.status(200).json({ email, token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: error.message });
+    } else {
+      next(error);
+    }
   }
 };
 

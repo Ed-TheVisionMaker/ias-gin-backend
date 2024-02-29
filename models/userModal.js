@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const { createCustomError } = require('../utils/errorHandler');
 
 const Schema = mongoose.Schema;
 
@@ -14,28 +15,32 @@ const newUserSchema = new Schema({
     type: String,
     required: true,
   },
+  // profile: { type: Schema.Types.ObjectId, ref: 'UserProfile' },
 });
 
 // creating my own static sign up method
 // statics are methods that are attached to the model, not the instance
 newUserSchema.statics.signup = async function (email, password) {
   if (!email || !password) {
-    throw Error('Both email and password must be filled in');
+    throw createCustomError(
+      'Both email and password must be filled in',
+      'ValidationError'
+    );
   }
 
   if (!validator.isEmail(email)) {
-    throw Error('Email is invalid');
+    throw createCustomError('Email is invalid', 'ValidationError');
   }
   // default min 1 lower case, 1 upper case, 1 number, 1 symbol, 8 characters
   if (!validator.isStrongPassword(password)) {
-    throw Error('Password not strong enough');
+    throw createCustomError('Password not strong enough', 'ValidationError');
   }
 
   // normal function since keyword this needs to point towards the model instance that inovkes it
   const exists = await this.findOne({ email });
 
   if (exists) {
-    throw Error('Email already in use');
+    throw createCustomError('Email already in use', 'ValidationError');
   }
 
   // salt adds random characters to password to provde unique hashes
@@ -59,48 +64,34 @@ newUserSchema.statics.login = async function (email, password) {
 
   const user = await this.findOne({ email });
 
-  if(!user) {
-    throw Error('Incorrect email');
+  if (!user) {
+    throw createCustomError('Incorrect email', 'ValidationError');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
-  if(!isMatch) {
-    throw Error('Incorrect password');
+  if (!isMatch) {
+    // throw Error('Incorrect password');
+    throw createCustomError('Incorrect password', 'ValidationError');
   }
 
   return user;
-
 };
 
 const userProfileSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    name: { type: String, required: true },
+    location: { type: String, required: true },
+    description: { type: String },
+    profilePhoto: { type: String },
+    // add any additional fields here
   },
-  //   adds a time created field to the schema
-  // also adds time updated field to the schema - possibly, need to check
   { timestamps: true }
 );
 
-// automatically creates a collection. Pluralises the name of the model
-// module.exports = {
-//   User: mongoose.model('UserProfile', userProfileSchema),
-//   newUser: mongoose.model('User', newUserSchema),
-// };
-
-module.exports = mongoose.model('User', newUserSchema);
+// mongoose automatically pluralises string as a collection.
+module.exports = {
+  User: mongoose.model('User', newUserSchema),
+  UserProfile: mongoose.model('UserProfile', userProfileSchema),
+};
