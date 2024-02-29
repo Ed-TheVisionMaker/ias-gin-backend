@@ -8,6 +8,7 @@ const {
   deleteUser,
   updateUser,
 } = require('../controllers/userControllers');
+const requireAuth = require('../middleware/requireAuth');
 
 const router = express.Router();
 
@@ -16,6 +17,11 @@ router.post('/login', loginUser);
 
 //signup route
 router.post('/signup', signupUser);
+
+// Fire this middleware function before all the routes.
+// if this fails the error prevents next() being triggered
+// so the other controller functions don't get triggered
+router.use(requireAuth);
 
 // GET all users
 router.get('/', getUsers);
