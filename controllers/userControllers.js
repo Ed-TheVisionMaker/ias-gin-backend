@@ -11,11 +11,10 @@ const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-    const id = user._id;
 
-    const token = createToken(id);
+    const token = createToken(user._id);
 
-    res.status(200).json({ email, token, id });
+    res.status(200).json({ userId: user._id, email, token });
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).json({ error: error.message });
@@ -30,13 +29,10 @@ const signupUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.signup(email, password);
-    await UserProfile.create({
-      userId: user._id,
-    });
 
     const token = createToken(user._id);
 
-    res.status(200).json({ email, token });
+    res.status(200).json({ userId: user._id, email, token });
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).json({ error: error.message });
@@ -69,23 +65,23 @@ const getUser = async (req, res) => {
     return res.status(404).json({ error: 'User not found, id invalid' });
   }
   //   get doc from db by id
-  const userProfile = await UserProfile.findOne({userId: id})
+  const userProfile = await UserProfile.findOne({ userId: id });
 
   if (!userProfile) {
-    return res.status(404).json({ error: 'User not found, no user' });
+    return res.status(404).json({ error: 'User profile not found' });
   }
 
   res.status(200).json(userProfile);
 };
 
 // create a new user
-const createUser = async (req, res) => {
-  const { name, email, description, location } = req.body;
+const createUserProfile = async (req, res) => {
+  const { userId, name, description, location } = req.body;
   //   add doc to db
   try {
-    const user = await User.create({
+    const user = await UserProfile.create({
+      userId,
       name,
-      email,
       description,
       location,
     });
@@ -132,7 +128,7 @@ const updateUser = async (req, res) => {
 module.exports = {
   loginUser,
   signupUser,
-  createUser,
+  createUserProfile,
   getUsers,
   getUser,
   deleteUser,
