@@ -1,4 +1,4 @@
-const { User } = require('../models/userModal');
+const { User, UserProfile } = require('../models/userModal');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
@@ -11,10 +11,11 @@ const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
+    const id = user._id;
 
-    const token = createToken(user._id);
+    const token = createToken(id);
 
-    res.status(200).json({ email, token });
+    res.status(200).json({ email, token, id });
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).json({ error: error.message });
@@ -29,6 +30,9 @@ const signupUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.signup(email, password);
+    await UserProfile.create({
+      userId: user._id,
+    });
 
     const token = createToken(user._id);
 
@@ -62,16 +66,16 @@ const getUser = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: 'User not found, id invalid' });
   }
   //   get doc from db by id
-  const user = await User.findById(id);
+  const userProfile = await UserProfile.findOne({userId: id})
 
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
+  if (!userProfile) {
+    return res.status(404).json({ error: 'User not found, no user' });
   }
 
-  res.status(200).json(user);
+  res.status(200).json(userProfile);
 };
 
 // create a new user

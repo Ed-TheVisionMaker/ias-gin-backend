@@ -15,7 +15,7 @@ const newUserSchema = new Schema({
     type: String,
     required: true,
   },
-  // profile: { type: Schema.Types.ObjectId, ref: 'UserProfile' },
+  id: { type: Schema.Types.ObjectId, ref: 'UserProfile' },
 });
 
 // creating my own static sign up method
@@ -81,8 +81,8 @@ newUserSchema.statics.login = async function (email, password) {
 const userProfileSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    name: { type: String, required: true },
-    location: { type: String, required: true },
+    name: { type: String },
+    location: { type: String },
     description: { type: String },
     profilePhoto: { type: String },
     // add any additional fields here
