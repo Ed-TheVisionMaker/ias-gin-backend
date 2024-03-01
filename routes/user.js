@@ -2,7 +2,7 @@ const express = require('express');
 const {
   loginUser,
   signupUser,
-  createUser,
+  createUserProfile,
   getUser,
   getUsers,
   deleteUser,
@@ -31,7 +31,7 @@ router.get('/', getUsers);
 router.get('/:id', getUser);
 
 // POST a new user
-router.post('/', createUser);
+router.post('/', createUserProfile);
 
 // DELETE a new user
 router.delete('/:id', deleteUser);
