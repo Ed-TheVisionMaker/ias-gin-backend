@@ -30,6 +30,8 @@ const signupUser = async (req, res, next) => {
   try {
     const user = await User.signup(email, password);
 
+    createUserProfile(user._id);
+
     const token = createToken(user._id);
 
     res.status(200).json({ userId: user._id, email, token });
@@ -39,6 +41,18 @@ const signupUser = async (req, res, next) => {
     } else {
       next(error);
     }
+  }
+};
+
+// create a new user profile
+const createUserProfile = async (userId) => {
+  //   add doc to db
+  try {
+    const userProfile = await UserProfile.create({
+      userId,
+    });
+  } catch (error) {
+    throw new Error(error.message)
   }
 };
 
@@ -72,23 +86,6 @@ const getUser = async (req, res) => {
   }
 
   res.status(200).json(userProfile);
-};
-
-// create a new user
-const createUserProfile = async (req, res) => {
-  const { userId, name, description, location } = req.body;
-  //   add doc to db
-  try {
-    const user = await UserProfile.create({
-      userId,
-      name,
-      description,
-      location,
-    });
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
 };
 
 // delete a user

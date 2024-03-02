@@ -3,6 +3,7 @@ const User = require('../models/userModal');
 
 const requireAuth = async (req, res, next) => {
   // verify authentication;
+  console.log('requireAuth fired')
   const { authorization } = req.headers;
 
   if (!authorization) {
