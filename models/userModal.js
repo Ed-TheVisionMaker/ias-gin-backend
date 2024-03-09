@@ -15,7 +15,7 @@ const newUserSchema = new Schema({
     type: String,
     required: true,
   },
-  id: { type: Schema.Types.ObjectId, ref: 'UserProfile' },
+  userId: { type: Schema.Types.ObjectId, ref: 'UserProfile' },
 });
 
 // creating my own static sign up method
@@ -41,7 +41,7 @@ newUserSchema.statics.signup = async function (email, password) {
 
   if (exists) {
     throw createCustomError('Email already in use', 'ValidationError');
-  }
+  } 
 
   // salt adds random characters to password to provde unique hashes
   // even if 2 passwords are the same
@@ -82,7 +82,7 @@ newUserSchema.statics.login = async function (email, password) {
 const userProfileSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    name: { type: String },
+    userName: { type: String },
     location: { type: String },
     description: { type: String },
     profilePhoto: { type: String },

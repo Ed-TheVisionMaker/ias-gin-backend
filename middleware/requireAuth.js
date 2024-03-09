@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModal');
+const { User } = require('../models/userModal');
 
 const requireAuth = async (req, res, next) => {
   // verify authentication;
-  console.log('requireAuth fired')
+  console.log('requireAuth fired');
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -17,7 +17,7 @@ const requireAuth = async (req, res, next) => {
     const { _id } = jwt.verify(token, process.env.JWT_SECRET);
 
     //store just the ID - a slimmed down version of the User document
-    req.user = await User.findOne({_id}).select('_id');
+    req.user = await User.findOne({ _id }).select('_id');
     next();
   } catch (error) {
     console.log(error);

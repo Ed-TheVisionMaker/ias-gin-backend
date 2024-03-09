@@ -22,7 +22,7 @@ router.post('/signup', signupUser);
 // Fire this middleware function before all the routes.
 // if this fails the error prevents next() being triggered
 // so the other controller functions don't get triggered
-// router.use(requireAuth);  
+router.use(requireAuth);  
 
 // GET all users
 router.get('/', getUsers);
