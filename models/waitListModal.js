@@ -1,16 +1,17 @@
-import { Schema, model } from 'mongoose';
+const mongoose = require('mongoose');
 const validator = require('validator');
+const { createCustomError } = require('../utils/errorHandler');
 
 const Schema = mongoose.Schema;
 
-const waitListSchema = new Schema({
+const waitlistSchema = new Schema({
   email: {
     type: String,
     required: true,
   },
 });
 
-waitListSchema.static.register = async function (email) {
+waitlistSchema.statics.register = async function (email) {
   if (!email) {
     throw createCustomError('Email is required', 'ValidationError');
   }
@@ -30,4 +31,4 @@ waitListSchema.static.register = async function (email) {
   return waitList;
 };
 
-module.exports('WaitList', waitListSchema);
+module.exports = mongoose.model('Waitlist', waitlistSchema);
