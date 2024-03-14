@@ -11,6 +11,10 @@ const waitListSchema = new Schema({
 });
 
 waitListSchema.static.register = async function (email) {
+  if (!email) {
+    throw createCustomError('Email is required', 'ValidationError');
+  }
+
   if (!validator.isEmail(email)) {
     throw createCustomError('Email is invalid', 'ValidationError');
   }
@@ -25,3 +29,5 @@ waitListSchema.static.register = async function (email) {
   });
   return waitList;
 };
+
+module.exports('WaitList', waitListSchema);
