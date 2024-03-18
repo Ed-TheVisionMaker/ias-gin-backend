@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
-const errorHandler = require('./middleware/errorHandling');
+const waitlistRoutes = require('./routes/waitlist');
 
 //  express app
 const app = express();
@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/api/user', userRoutes);
+app.use('/api/waitlist', waitlistRoutes);
 
 // connect to db
 mongoose
